@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversations</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+            margin: 0;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        .conversation {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .question {
+            margin-bottom: 10px;
+        }
+
+        .reply {
+            margin-bottom: 10px;
+        }
+
+        .created-at {
+            color: #888;
+        }
+
+        
+        .logout-container{
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .logout-button{
+            background-color: #4CAF50;
+            color: #ffffff;
+            padding: 10px 20px;
+            font-size: 16px;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .logout-button:hover{
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h2>Conversations</h2>
+    {% for conversation in conversations%}
+    <div class="conversation">
+        <div class="question">
+            <strong>Question:</strong> {{conversation.query}}
+        </div>
+        {% if conversation.reply %}
+        <div class="reply">
+        <strong>Reply: </strong> {{conversation.reply}}
+        </div>
+        {% else %}
+        <div class="reply">
+            <strong>Reply:</strong> No reply yet
+        </div>
+        {% endif %}
+        <div class="created-at">
+            <strong>Timestamp:</strong> {{conversation.created_at}}
+        </div>
+    </div>
+    <hr>
+    {% empty %}
+        <p>No conversations found</p>
+    {% endfor %}
+    <div class="logout-container">
+        <a href="{% url 'chat_login' %}" class="logout-button">Logout</a>
+    </div>
+    
+</body>
+</html>
