@@ -67,13 +67,7 @@ def query_view(request):
             query_obj = form.save()
             queries = question.find({'created_at':{'$gte': thirty_minutes_ago}, "user_id": user_id})
             
-            #Save the reply to the query object
-            responses = [
-            "I'm sorry, I don't have the answer.",
-            "That's an interesting question!",
-            "Let me think about that...",
-            "I'm not sure, could you provide more context?",
-            ]
+
             conversation = [
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": query}]
