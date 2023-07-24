@@ -1,17 +1,20 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from django.contrib import messages
+from django.conf import settings
 from .forms import SignUpForm, QueryForm
 import random
 from .models import Query, Conversation
 import datetime
 import pymongo
+import openai
 from pymongo import MongoClient
 client = MongoClient('db', 27017)
 db = client['conversation']
 question = db.question
 # Create your views here.
-
+api_key = settings.OPENAI_API_KEY
+openai.api_key = api_key
 def home_view(request, *args, **kwargs):
     return render(request, "home.html", {})
 
@@ -64,23 +67,24 @@ def query_view(request):
             query_obj = form.save()
             queries = question.find({'created_at':{'$gte': thirty_minutes_ago}, "user_id": user_id})
             
-            #Save the reply to the query object
-            responses = [
-            "I'm sorry, I don't have the answer.",
-            "That's an interesting question!",
-            "Let me think about that...",
-            "I'm not sure, could you provide more context?",
-            ]
+            conversation = [
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": query}]
+
             
-            random_response = random.choice(responses)
+            response = openai.ChatCompletion.create(
+                model = "gpt-3.5-turbo",
+                messages=conversation
+            )
+            assistant_message = response['choices'][0]['message']['content']
             question.insert_one({
                 'query': query,
-                'reply': random_response,
+                'reply': assistant_message,
                 'created_at': datetime.datetime.now(),
                 'user_id': user_id
             })
 
-            query_obj.reply = random_response
+            query_obj.reply = assistant_message
             query_obj.save()
             document = question.find({"user_id": user_id}).sort([("_id", -1)]).limit(1)[0]
             if datetime.datetime.now() - document['created_at'] <= datetime.timedelta(minutes=30):
