@@ -67,7 +67,6 @@ def query_view(request):
             query_obj = form.save()
             queries = question.find({'created_at':{'$gte': thirty_minutes_ago}, "user_id": user_id})
             
-
             conversation = [
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": query}]
