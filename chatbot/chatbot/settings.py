@@ -78,15 +78,6 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-    },
-    'mongo':{
-        'ENGINE': 'djongo',
-        'ENFORCE_SCHEMA': False,
-        'NAME': 'conversation',
-        'client': {
-           'host': 'db',
-           'port': 27017
-        }
     }
 }
 
@@ -132,4 +123,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-OPENAI_API_KEY = "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"
+OPENAI_API_KEY = "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"
